@@ -1,6 +1,6 @@
 const html = String.raw;
 const template = document.createElement('template');
-template.innerHTML = html `
+template.innerHTML = html`
     <style>
         .gallery-item {
             height: 300px;

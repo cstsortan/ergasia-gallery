@@ -48,9 +48,15 @@ template.innerHTML = html`
     gallery-item {
         display: inline-block;
     }
+
+    button.show-more-button {
+        display: block;
+        margin: 20px auto;
+    }
     </style>
     <div class="gallery-container">
     </div>
+    <button class="show-more-button">Show more</button>
 `;
 
 export class GalleryGrid extends HTMLElement {
@@ -63,6 +69,9 @@ export class GalleryGrid extends HTMLElement {
 
         this.shadowRoot.appendChild(template.content.cloneNode(true));
         this.container = this.shadowRoot.querySelector('.gallery-container');
+        this.showMoreButton = this.shadowRoot.querySelector('.show-more-button');
+
+        this.picsumIndex = 0;
     }
 
     /**
@@ -73,13 +82,20 @@ export class GalleryGrid extends HTMLElement {
      * ########################
      */
     connectedCallback() {
-        for(let i=0; i<20; i++) {
-            const photoUrl = `${base_url}${i}`
-            const img = new GalleryItem();
-            img.src = photoUrl;
-            this.container.appendChild(img);
+        this.renderPhotos(10);
+        this.showMoreButton.addEventListener('click', () => {
+            this.renderPhotos(5)
+        });
+    }
 
-            img.addEventListener('click', () => {
+    renderPhotos(count) {
+        for(let i=0; i<count; i++) {
+            const photoUrl = `${base_url}${i + this.picsumIndex}`
+            const galleryItem = new GalleryItem();
+            galleryItem.src = photoUrl;
+            this.container.appendChild(galleryItem);
+
+            galleryItem.addEventListener('click', () => {
                 this.dispatchEvent(new CustomEvent('item-selected', {
                     detail: {
                         content: photoUrl,
@@ -87,7 +103,7 @@ export class GalleryGrid extends HTMLElement {
                 }));
             });
         }
-
+        this.picsumIndex += count;
     }
 }
 customElements.define('gallery-grid', GalleryGrid);

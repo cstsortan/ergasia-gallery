@@ -1,4 +1,4 @@
 export const pages = [
     "Gallery",
-    "Profile",
+    "Profile"
 ];
